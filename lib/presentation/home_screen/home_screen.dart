@@ -29,7 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Marker? _destination;
   Directions? _info;
 
-  final Dio _dio = Dio(); // Create a Dio instance
+  final Dio _dio = Dio();
+  final TextEditingController _latController = TextEditingController();
+  final TextEditingController _lngController =
+      TextEditingController(); // Create a Dio instance
 
   final List<LatLng> _beachLocations = [
     LatLng(17.1421, 73.2682), // Ganpatipule Beach, Maharashtra
@@ -59,85 +62,125 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _googleMapController?.dispose();
+    _latController.dispose();
+    _lngController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 36, 6, 148),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 36, 6, 148),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Text(
                 'Tarini',
                 style: TextStyle(
                   color: Color.fromARGB(255, 255, 255, 255),
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
-              Text(
-                'तरिणी', // Hindi version
+            ),
+            Flexible(
+              child: Text(
+                'तरिणी',
                 style: TextStyle(
                   color: Color.fromARGB(255, 255, 255, 255),
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
-              ),
-            ],
-          ),
-        ),
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(
-              height: SizeUtils.height,
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 0,
-                          left: 12,
-                          right: 12,
-                          bottom: 10,
-                        ),
-                        child: CustomSearchView(
-                          controller: searchController,
-                          hintText: "Search",
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 14.h,
-                            vertical: 12.h,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: _buildMap(), // Google Map integrated here
-                      ),
-                    ],
-                  ),
-                ],
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          foregroundColor: const Color.fromARGB(255, 252, 250, 250),
-          onPressed: () => _googleMapController?.animateCamera(
-            _info != null
-                ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.0)
-                : CameraUpdate.newCameraPosition(_initialCameraPosition),
+      ),
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            height: SizeUtils.height,
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 0,
+                        left: 12,
+                        right: 12,
+                        bottom: 10,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _latController,
+                              decoration: InputDecoration(
+                                hintText: 'Enter latitude',
+                                border: OutlineInputBorder(),
+                                fillColor: Colors.white,
+                                filled: true,
+                              ),
+                              keyboardType: TextInputType.numberWithOptions(
+                                  decimal: true, signed: false),
+                            ),
+                          ),
+                          SizedBox(width: 8.0),
+                          Expanded(
+                            child: TextField(
+                              controller: _lngController,
+                              decoration: InputDecoration(
+                                hintText: 'Enter longitude',
+                                border: OutlineInputBorder(),
+                                fillColor: Colors.white,
+                                filled: true,
+                              ),
+                              keyboardType: TextInputType.numberWithOptions(
+                                  decimal: true, signed: false),
+                            ),
+                          ),
+                          SizedBox(width: 8.0),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.search),
+                              onPressed: _onSearchPressed,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: _buildMap(), // Google Map integrated here
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          child: const Icon(Icons.center_focus_strong),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: const Color.fromARGB(255, 252, 250, 250),
+        onPressed: () => _googleMapController?.animateCamera(
+          _info != null
+              ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.0)
+              : CameraUpdate.newCameraPosition(_initialCameraPosition),
         ),
+        child: const Icon(Icons.center_focus_strong),
       ),
     );
   }
@@ -244,46 +287,56 @@ class _HomeScreenState extends State<HomeScreen> {
         if (snapshot.hasError) {
           return Center(child: Text('Error loading weather data'));
         }
+
         final weatherData = snapshot.data!;
         final temperature = weatherData['main']['temp'];
         final windSpeed = weatherData['wind']['speed'];
         final condition = weatherData['weather'][0]['description'];
 
-        return Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black),
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Weather Information',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+        return SingleChildScrollView(
+          child: Container(
+            constraints: BoxConstraints(
+              minHeight: 150, // Minimum height for the container
+              maxHeight: MediaQuery.of(context).size.height *
+                  0.6, // Maximum height is 60% of the screen
+              maxWidth: MediaQuery.of(context).size.width *
+                  0.9, // Maximum width is 90% of the screen
+            ),
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Weather Information',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Condition: $condition',
-                style: TextStyle(fontSize: 16),
-              ),
-              SizedBox(height: 5),
-              Text(
-                'Temperature: $temperature°C',
-                style: TextStyle(fontSize: 16),
-              ),
-              SizedBox(height: 5),
-              Text(
-                'Wind Speed: $windSpeed m/s',
-                style: TextStyle(fontSize: 16),
-              ),
-            ],
+                SizedBox(height: 10),
+                Text(
+                  'Condition: $condition',
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Temperature: $temperature°C',
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Wind Speed: $windSpeed m/s',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -348,5 +401,18 @@ class _HomeScreenState extends State<HomeScreen> {
             ActualviewScreen(), // No need to pass position now
       ),
     );
+  }
+
+  void _onSearchPressed() {
+    final lat = double.tryParse(_latController.text);
+    final lng = double.tryParse(_lngController.text);
+
+    if (lat != null && lng != null) {
+      _addMarker(LatLng(lat, lng));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid latitude or longitude')),
+      );
+    }
   }
 }
