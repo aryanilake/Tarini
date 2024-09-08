@@ -22,7 +22,7 @@ class ImageConstant {
   static String sunny = '$imagePath/sunny.svg';
   static String locp = '$imagePath/location_pin.svg';
   static String sunset = '$imagePath/sunset.svg';
-  // static String graph = '$imagePath/graph.svg';
+  static String incois = '$imagePath/incois_logo.png';
 
   static String imgLocationOnPrimarycontainer =
       '$imagePath/img_location_on_primarycontainer.svg';

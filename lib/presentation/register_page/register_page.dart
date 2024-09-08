@@ -21,6 +21,7 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
         body: SizedBox(
@@ -208,6 +209,18 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
                                 textAlign:
                                     TextAlign.center, // Center align the text
                               ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+                        // Responsive Image with Padding
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30.0),
+                          child: SizedBox(
+                            width: screenWidth * 0.6,
+                            child: Image.asset(
+                              ImageConstant.incois,
+                              fit: BoxFit.contain,
                             ),
                           ),
                         ),

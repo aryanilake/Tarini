@@ -17,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
         body: SizedBox(
@@ -146,6 +147,22 @@ class _LoginPageState extends State<LoginPage> {
                           child: Text(
                             "Register",
                             style: CustomTextStyles.titleLargePrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+                        // Responsive Image with Padding
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 50.0), // Add padding to move image downward
+                          child: SizedBox(
+                            width: screenWidth *
+                                0.6, // Set width as a percentage of screen width
+                            child: Image.asset(
+                              ImageConstant
+                                  .incois, // Replace with your image path
+                              fit: BoxFit
+                                  .contain, // Adjusts image to fit the available space
+                            ),
                           ),
                         ),
                       ],

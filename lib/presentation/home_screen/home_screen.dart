@@ -264,8 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
       queryParameters: {
         'lat': location.latitude,
         'lon': location.longitude,
-        'appid':
-            'e7a8163628d3e50dea93b223f7eea0d1', // Replace with your OpenWeather API key
+        'appid': '', // Replace with your OpenWeather API key
         'units': 'metric',
       },
     );
