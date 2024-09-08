@@ -66,16 +66,37 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 36, 6, 148),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Tarini',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'तरिणी', // Hindi version
+                style: TextStyle(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
         resizeToAvoidBottomInset: false,
         body: Stack(
           alignment: Alignment.center,
           children: [
             Container(
               height: SizeUtils.height,
-              padding: EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 12,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -83,7 +104,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(
-                            top: 12, left: 12, right: 12, bottom: 12),
+                          top: 0,
+                          left: 12,
+                          right: 12,
+                          bottom: 10,
+                        ),
                         child: CustomSearchView(
                           controller: searchController,
                           hintText: "Search",
