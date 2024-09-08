@@ -1,0 +1,41 @@
+name: tarini
+description: "A new Flutter project."
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  cached_network_image: ^3.3.1
+  flutter_svg: ^2.0.10+1
+  google_maps_flutter: ^2.7.0
+  connectivity_plus: ^6.0.4
+  dio: ^5.6.0
+  flutter_polyline_points: ^2.1.0
+  http: ^1.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/images/
+    # - assets/images/restaurant_img.jpg
+
+  # fonts:
+  #   - family: Inter
+  #     fonts:
+  #       - asset: assets/fonts/InterRegular.ttf
+  #         weight: 400
+  #   - family: Roboto
+  #     fonts:
+  #       - asset: assets/fonts/RobotoRegular.ttf
+  #         weight: 400
